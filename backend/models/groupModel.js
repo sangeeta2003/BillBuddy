@@ -1,5 +1,5 @@
 
-const mongoose = require('../config/db');
+import mongoose from "mongoose";
 
 const groupSchema = new mongoose.Schema({
     groupname:{
@@ -38,7 +38,4 @@ const groupSchema = new mongoose.Schema({
 
 });
 
-const Group = mongoose.model('Group',groupSchema);
-module.exports={
-    Group
-}
+export const Group = mongoose.model('Group',groupSchema);
