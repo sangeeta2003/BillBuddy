@@ -3,6 +3,9 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { z } from "zod";
 import dotenv from "dotenv";
+import mongoose from "mongoose";
+import { Expense } from "../models/expenseModel.js";
+import { Settlement } from "../models/settlementModel.js";
 
 dotenv.config();
 
@@ -79,5 +82,53 @@ export const signinUser = async (req, res) => {
   } catch (e) {
     console.error(e);
     res.status(500).json({ message: e.message });
+  }
+};
+
+
+export const getUserDashboard = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ message: "Invalid user ID" });
+    }
+
+    // All expenses where the user participated
+    const expenses = await Expense.find({
+      participants: userId,
+    }).populate("paidBy", "name");
+
+    let totalOwed = 0;
+    let totalLent = 0;
+
+    // Calculate expense-based owed/lent
+    expenses.forEach((exp) => {
+      const share = exp.amount / exp.participants.length;
+      if (exp.paidBy._id.toString() === userId) {
+        totalLent += exp.amount - share;
+      } else {
+        totalOwed += share;
+      }
+    });
+
+    // Apply settlements
+    const settlements = await Settlement.find({
+      $or: [{ paidBy: userId }, { receivedBy: userId }],
+    });
+
+    settlements.forEach((s) => {
+      if (s.paidBy.toString() === userId) totalOwed -= s.amount;
+      else totalLent -= s.amount;
+    });
+
+    res.json({
+      userId,
+      totalOwed: Math.max(totalOwed, 0),
+      totalLent: Math.max(totalLent, 0),
+      netBalance: totalLent - totalOwed,
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 };

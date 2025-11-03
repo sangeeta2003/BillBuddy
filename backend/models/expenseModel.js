@@ -1,5 +1,5 @@
 
-const mongoose = require('../config/db');
+import mongoose from "mongoose";
 
 const expenseSchema = new mongoose.Schema({
     title:{
@@ -61,8 +61,5 @@ createdAt:{
 });
 
 
-const Expense = mongoose.model('Expense',expenseSchema);
+export const Expense = mongoose.model('Expense',expenseSchema);
 
-module.exports={
-    Expense
-}
