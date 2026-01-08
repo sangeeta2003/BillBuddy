@@ -3,7 +3,7 @@ node_modules/
 
 # Environment variables
 .env
-.env.example
+# Keep .env.example as it's a template for users
 
 # Logs
 logs
