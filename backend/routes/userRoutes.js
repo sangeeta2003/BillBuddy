@@ -5,7 +5,8 @@ import { getUserDashboard } from "../controllers/userController.js";
 const router = express.Router();
 
 router.post("/register", registerUser);
-router.post("/login", signinUser);
-router.get("/:userId/dashboard", getUserDashboard);
+router.post("/signin", signinUser);
+router.post("/login", signinUser); // Support both for compatibility
+router.get("/dashboard/:userId", getUserDashboard);
 
 export default router;

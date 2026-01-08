@@ -9,6 +9,7 @@ const router = express.Router();
 
 router.post("/", createNotification);
 router.get("/:userId", getUserNotifications);
-router.put("/:notificationId/read", markAsRead);
+router.put("/:id", markAsRead);
+router.put("/:notificationId/read", markAsRead); // Support both
 
 export default router;

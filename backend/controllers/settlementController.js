@@ -49,11 +49,8 @@ export const getSettlementHistory = async (req, res) => {
       .populate("paidTo", "name email")
       .sort({ createdAt: -1 }); 
 
-    res.status(200).json({
-      message: "Settlement history fetched successfully",
-      total: settlements.length,
-      settlements,
-    });
+    // Return settlements array directly for frontend compatibility
+    res.status(200).json(settlements);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

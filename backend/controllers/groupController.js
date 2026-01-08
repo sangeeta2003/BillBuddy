@@ -63,6 +63,51 @@ export const getAllGroups = async (req, res) => {
   }
 };
 
+export const getGroupById = async (req, res) => {
+  try {
+    const { groupId } = req.params;
+    
+    if (!mongoose.Types.ObjectId.isValid(groupId)) {
+      return res.status(400).json({ message: "Invalid group ID" });
+    }
+
+    const group = await Group.findById(groupId)
+      .populate("members", "name email")
+      .populate("createdBy", "name email");
+    
+    if (!group) {
+      return res.status(404).json({ message: "Group not found" });
+    }
+
+    res.status(200).json(group);
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ message: e.message });
+  }
+};
+
+export const getUserGroups = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ message: "Invalid user ID" });
+    }
+
+    const groups = await Group.find({
+      members: userId
+    })
+      .populate("members", "name email")
+      .populate("createdBy", "name email")
+      .sort({ createdAt: -1 });
+
+    res.status(200).json(groups);
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ message: e.message });
+  }
+};
+
 
 const addMemberSchema = z.object({
   groupId: z.string(),

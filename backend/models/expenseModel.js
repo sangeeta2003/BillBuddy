@@ -26,6 +26,11 @@ const expenseSchema = new mongoose.Schema({
                         ref:'User'
         }
     ],
+    groupId:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'Group',
+        required:false
+    },
 splitType:{
     type:String,
     enum:['equal','unequal','percentage'],

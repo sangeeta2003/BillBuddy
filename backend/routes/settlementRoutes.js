@@ -7,6 +7,7 @@ const router = express.Router();
 
 
 router.post("/", settlePayment);
-router.get("/history/:userId", authMiddleware, getSettlementHistory);
+router.get("/:userId", authMiddleware, getSettlementHistory);
+router.get("/history/:userId", authMiddleware, getSettlementHistory); // Support both
 
 export default router;

@@ -11,6 +11,7 @@ const expenseSchema = z.object({
   paidBy: z.string(),
   participants: z.array(z.string()).nonempty("Participants are required"),
   splitType: z.enum(["equal", "unequal", "percentage"]),
+  groupId: z.string().optional(),
   splitDetails: z
     .array(
       z.object({
@@ -33,7 +34,7 @@ export const createExpense = async (req, res) => {
       });
     }
 
-    const { title, amount, paidBy, participants, splitType, splitDetails = [] } =
+    const { title, amount, paidBy, participants, splitType, groupId, splitDetails = [] } =
       result.data;
 
     const allUserIds = Array.from(new Set([paidBy, ...participants]));
@@ -96,6 +97,7 @@ export const createExpense = async (req, res) => {
       paidBy,
       participants,
       splitType,
+      groupId: groupId || null,
       splitDetails: computedSplit,
     });
 
