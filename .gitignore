@@ -39,5 +39,5 @@ temp/
 .env.test.local
 .env.production.local
 
-# Lock files (keep package-lock.json for consistency, ignore yarn.lock)
+# Lock files
 yarn.lock
